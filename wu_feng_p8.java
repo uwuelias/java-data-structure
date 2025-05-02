@@ -1,4 +1,3 @@
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -10,10 +9,13 @@ import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.awt.event.ActionEvent;
 
 class wu_feng_p8 {
@@ -56,32 +58,40 @@ class wu_feng_p8 {
 
         JPanel leftButtonPanel = new JPanel();
         leftButtonPanel.setBorder(new LineBorder(Color.black, 2));
-        GridBagLayout leftGridBagLayout = new GridBagLayout();
-        leftButtonPanel.setLayout(leftGridBagLayout);
+        leftButtonPanel.setLayout(new GridBagLayout());
         leftButtonPanel.setMinimumSize(new Dimension(330, 350));
         leftButtonPanel.setPreferredSize(new Dimension(330, 350));
 
-        // initalize buttons for left button panel
-        JButton sortInts = new JButton("sort ints");
-        JButton addToBst = new JButton("add to bst");
-        JButton addToTreeset = new JButton("add to treeset");
-        JButton addToPQ = new JButton("add to priority queue");
-        JButton addToHashSet = new JButton("add to hashset");
-        JButton addToAL = new JButton("add to array list");
-        JButton addToSortedAL = new JButton("add to sorted array list");
-        JButton addToArray = new JButton("add to array");
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(2, 2, 2, 2);
 
-        // initalize labels for left button panel
-        JLabel sortIntsLabel = new JLabel("no result");
-        JLabel addToBstLabel = new JLabel("no result");
-        JLabel addToTreesetLabel = new JLabel("no result");
-        JLabel addToPQLabel = new JLabel("no result");
-        JLabel addToHashSetLabel = new JLabel("no result");
-        JLabel addToLabel = new JLabel("no result");
-        JLabel addtoSortedLabel = new JLabel("no result");
-        JLabel addToArrayLabel = new JLabel("no result");
+        String[] leftButtonsText = {
+                "sort ints", "add to bst", "add to treeset", "add to priority queue", "add to hashset",
+                "add to arraylist", "add to sorted arraylist", "add to array", "merge sort ints", "merge2 sort ints",
+                "quick sort ints"
+        };
 
-        // adding buttons and labels to left button panel
+        Map<JButton, JLabel> buttonLabelMap = new HashMap<>();
+
+        for (int i = 0; i < leftButtonsText.length; i++) {
+            JButton button = new JButton(leftButtonsText[i]);
+            JLabel label = new JLabel("no result");
+
+            button.setPreferredSize(new Dimension(160, 25));
+            label.setPreferredSize(new Dimension(60, 25));
+
+            button.addActionListener(new ButtonActionListener(buttonLabelMap));
+            buttonLabelMap.put(button, label);
+
+            // button
+            gbc.gridy = i;
+            gbc.gridx = 0;
+            leftButtonPanel.add(button, gbc);
+
+            // label
+            gbc.gridx = 1;
+            leftButtonPanel.add(label, gbc);
+        }
 
         JPanel rightButtonPanel = new JPanel();
         rightButtonPanel.setBorder(new LineBorder(Color.black, 2));
@@ -123,6 +133,19 @@ class wu_feng_p8 {
             if (m.getText().toLowerCase().equals("exit")) {
                 System.exit(0);
             }
+        }
+    }
+
+    static class ButtonActionListener implements ActionListener {
+        private Map<JButton, JLabel> map;
+
+        public ButtonActionListener(Map<JButton, JLabel> map) {
+            this.map = map;
+        }
+
+        public void actionPerformed(ActionEvent e) {
+            JButton button = (JButton) e.getSource();
+            JLabel label = map.get(button);
         }
     }
 
