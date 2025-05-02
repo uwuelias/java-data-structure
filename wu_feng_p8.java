@@ -71,17 +71,18 @@ class wu_feng_p8 {
                 "quick sort ints"
         };
 
-        Map<JButton, JLabel> buttonLabelMap = new HashMap<>();
+        Map<JButton, JLabel> leftButtonLabelMap = new HashMap<>();
 
         for (int i = 0; i < leftButtonsText.length; i++) {
             JButton button = new JButton(leftButtonsText[i]);
+            button.setEnabled(false);
             JLabel label = new JLabel("no result");
 
             button.setPreferredSize(new Dimension(160, 25));
             label.setPreferredSize(new Dimension(60, 25));
 
-            button.addActionListener(new ButtonActionListener(buttonLabelMap));
-            buttonLabelMap.put(button, label);
+            button.addActionListener(new ButtonActionListener(leftButtonLabelMap));
+            leftButtonLabelMap.put(button, label);
 
             // button
             gbc.gridy = i;
@@ -100,6 +101,36 @@ class wu_feng_p8 {
         rightButtonPanel.setMinimumSize(new Dimension(330, 350));
         rightButtonPanel.setPreferredSize(new Dimension(330, 350));
 
+        String[] rightButtonsText = {
+                "search sorted ints", "search bst", "search treeset", "search priority queue", "search hashset",
+                "search arraylist", "search sorted arraylist", "search array", "search merge sorted ints",
+                "search merge2 sorted ints",
+                "search quick sorted ints"
+        };
+
+        Map<JButton, JLabel> rightButtonLabelMap = new HashMap<>();
+
+        for (int i = 0; i < leftButtonsText.length; i++) {
+            JButton button = new JButton(rightButtonsText[i]);
+            button.setEnabled(false);
+            JLabel label = new JLabel("no result");
+
+            button.setPreferredSize(new Dimension(160, 25));
+            label.setPreferredSize(new Dimension(60, 25));
+
+            button.addActionListener(new ButtonActionListener(rightButtonLabelMap));
+            rightButtonLabelMap.put(button, label);
+
+            // button
+            gbc.gridy = i;
+            gbc.gridx = 0;
+            rightButtonPanel.add(button, gbc);
+
+            // label
+            gbc.gridx = 1;
+            rightButtonPanel.add(label, gbc);
+        }
+
         JPanel mainButtonPanel = new JPanel();
         mainButtonPanel.setBorder(new LineBorder(Color.black, 2));
         BoxLayout boxLayout = new BoxLayout(mainButtonPanel, BoxLayout.X_AXIS);
@@ -117,7 +148,6 @@ class wu_feng_p8 {
         frame.setContentPane(mainPanel);
         frame.validate();
         frame.setVisible(true);
-
     }
 
     static class MenuItemActionListener implements ActionListener {
