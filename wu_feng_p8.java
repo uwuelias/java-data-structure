@@ -269,6 +269,10 @@ class wu_feng_p8 {
         JMenuItem readSearchFile = new JMenuItem("Read Search File");
         JMenuItem exit = new JMenuItem("exit");
 
+        MenuItemActionListener readSortFileListener = new MenuItemActionListener(readSortFile);
+        MenuItemActionListener readSearchFileListener = new MenuItemActionListener(readSearchFile);
+        MenuItemActionListener exitListener = new MenuItemActionListener(exit);
+
         menuBar.add(file);
 
         file.add(readSortFile);
@@ -319,6 +323,11 @@ class wu_feng_p8 {
             gbc.gridy = i;
             gbc.anchor = GridBagConstraints.LINE_END;
             leftButtonPanel.add(leftLabels[i], gbc);
+        }
+
+        // button listener for left panel
+        for (int i = 0; i < leftButtons.length; i++) {
+
         }
 
         JPanel rightButtonPanel = new JPanel();
@@ -374,12 +383,6 @@ class wu_feng_p8 {
             rightButtonPanel.add(rightLabels[i], gbc);
         }
 
-        MenuItemActionListener readSortFileListener = new MenuItemActionListener(readSortFile, leftButtons,
-                rightButtons);
-        MenuItemActionListener readSearchFileListener = new MenuItemActionListener(readSearchFile, leftButtons,
-                rightButtons);
-        MenuItemActionListener exitListener = new MenuItemActionListener(exit, leftButtons, rightButtons);
-
         readSortFile.addActionListener(readSortFileListener);
         readSearchFile.addActionListener(readSearchFileListener);
         exit.addActionListener(exitListener);
@@ -405,13 +408,9 @@ class wu_feng_p8 {
 
     static class MenuItemActionListener implements ActionListener {
         private JMenuItem m;
-        private JButton[] leftButtons;
-        private JButton[] rightButtons;
 
-        MenuItemActionListener(JMenuItem m, JButton[] leftButtons, JButton[] rightButtons) {
+        MenuItemActionListener(JMenuItem m) {
             this.m = m;
-            this.leftButtons = leftButtons;
-            this.rightButtons = rightButtons;
         }
 
         public void actionPerformed(ActionEvent e) {
