@@ -12,21 +12,248 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.PriorityQueue;
+import java.util.TreeSet;
 import java.awt.event.ActionEvent;
 
 class wu_feng_p8 {
     private static int width = 700;
     private static int height = 350;
 
+    private static String sortFile;
+    private static String searchFile;
+
+    private static JButton[] leftButtons = new JButton[8];
+    private static JLabel[] leftLabels = new JLabel[8];
+    private static JButton[] rightButtons = new JButton[8];
+    private static JLabel[] rightLabels = new JLabel[8];
+
+    private static ArrayList<Integer> sortInts = new ArrayList<>();
+    private static ArrayList<Integer> searchInts = new ArrayList<>();
+    private static wu_feng_BinarySearchTree bst = new wu_feng_BinarySearchTree();
+    private static TreeSet<Integer> ts = new TreeSet<>();
+    private static HashSet<Integer> hs = new HashSet<>();
+    private static PriorityQueue<Integer> pq = new PriorityQueue<>();
+    private static ArrayList<Integer> al = new ArrayList<>();
+    private static ArrayList<Integer> al2 = new ArrayList<>();
+    private static int[] arr = new int[sortInts.size()];
+
+    private static void selectionSort() {
+        int size = sortInts.size();
+
+        for (int i = 0; i < size - 1; i++) {
+            int minIdx = i;
+            for (int j = i + 1; j < size; j++) {
+                if (sortInts.get(minIdx) > sortInts.get(j)) {
+                    minIdx = j;
+                }
+            }
+
+            if (minIdx != i) {
+                int temp = sortInts.get(i);
+                sortInts.set(i, sortInts.get(minIdx));
+                sortInts.set(minIdx, temp);
+            }
+        }
+    }
+
+    private static int searchInts() {
+        for (int x : sortInts) {
+            int low = 0, high = searchInts.size() - 1;
+
+            while (low <= high) {
+                int mid = (low + high) / 2;
+
+                if (searchInts.get(mid) == x) {
+                    break;
+                }
+
+                if (searchInts.get(mid) < x) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static void addToBinarySearchTree() {
+        bst.setRoot(new Node(sortInts.get(0)));
+
+        for (int i = 1; i < sortInts.size(); i++) {
+            bst.insertNode(new Node(sortInts.get(i)));
+        }
+    }
+
+    private static int searchBinarySearchTree() {
+        for (int x : sortInts) {
+            Node y = new Node(x);
+            if (bst.getNode(y, x) != null) {
+                continue;
+            }
+        }
+        return -1;
+    }
+
+    private static void addToTreeSet() {
+        for (int x : sortInts) {
+            ts.add(x);
+        }
+    }
+
+    private static int searchTreeSet() {
+        for (int x : sortInts) {
+            TreeSet<Integer> temp = ts;
+            while (!temp.isEmpty()) {
+                int y = temp.pollFirst();
+                if (y == x) {
+                    break;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static void addToHashSet() {
+        for (int x : sortInts) {
+            hs.add(x);
+        }
+    }
+
+    private static int searchHashSet() {
+        for (int x : sortInts) {
+            Iterator<Integer> temp = hs.iterator();
+
+            while (temp.hasNext()) {
+                if (temp.next() == x) {
+                    break;
+                }
+            }
+        }
+        return -1;
+
+    }
+
+    private static void addToPriorityQueue() {
+        for (int x : sortInts) {
+            pq.add(x);
+        }
+    }
+
+    private static int searchPriorityQueue() {
+        for (int x : sortInts) {
+            Iterator<Integer> temp = pq.iterator();
+
+            while (temp.hasNext()) {
+                if (temp.next() == x) {
+                    break;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static void addToArrayList() {
+        for (int x : sortInts) {
+            al.add(x);
+        }
+    }
+
+    private static int searchArrayList() {
+        for (int x : sortInts) {
+            for (int i = 0; i < al.size(); i++) {
+                if (al.get(i) == x) {
+                    break;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static void addToSortedArrayList() {
+        for (int x : sortInts) {
+            al2.add(x);
+        }
+
+        Collections.sort(al2);
+    }
+
+    private static int searchSortedArrayList() {
+        for (int x : sortInts) {
+            for (int i = 0; i < al2.size(); i++) {
+                if (al2.get(i) == x) {
+                    break;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static void addToArray() {
+        for (int i = 0; i < sortInts.size(); i++) {
+            arr[i] = sortInts.get(i);
+        }
+    }
+
+    private static int searchArray() {
+        for (int x : sortInts) {
+            for (int i = 0; i < arr.length; i++) {
+                if (arr[i] == x) {
+                    break;
+                }
+            }
+        }
+
+        return -1;
+    }
+
+    private static void readData(String filename, boolean readSortValues) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            String line;
+
+            if (readSortValues) {
+                while ((line = br.readLine()) != null) {
+                    sortInts.add(Integer.parseInt(line));
+                    for (JButton btn : leftButtons) {
+                        btn.setEnabled(true);
+                    }
+                }
+            } else {
+                while ((line = br.readLine()) != null) {
+                    searchInts.add(Integer.parseInt(line));
+                    for (int i = 0; i < rightButtons.length; i++) {
+                        if (!leftLabels[i].getText().equals("no result")) {
+                            rightButtons[i].setEnabled(true);
+                        }
+                    }
+                }
+            }
+
+            br.close();
+        } catch (Exception e) {
+            System.out.println(e.toString());
+        }
+    }
+
     public static void main(String[] args) {
-        /*
-         * String searchFile = args[0];
-         * String sortFile = args[1];
-         */
+        if (args.length != 2) {
+            System.out.println("invalid file input amount");
+            System.exit(0);
+        }
+        sortFile = args[0];
+        searchFile = args[1];
 
         JFrame frame = new JFrame("lab12");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,14 +269,6 @@ class wu_feng_p8 {
         JMenuItem readSearchFile = new JMenuItem("Read Search File");
         JMenuItem exit = new JMenuItem("exit");
 
-        MenuItemActionListener readSortFileListener = new MenuItemActionListener(readSortFile);
-        MenuItemActionListener readSearchFileListener = new MenuItemActionListener(readSearchFile);
-        MenuItemActionListener exitListener = new MenuItemActionListener(exit);
-
-        readSortFile.addActionListener(readSortFileListener);
-        readSearchFile.addActionListener(readSearchFileListener);
-        exit.addActionListener(exitListener);
-
         menuBar.add(file);
 
         file.add(readSortFile);
@@ -63,35 +282,43 @@ class wu_feng_p8 {
         leftButtonPanel.setPreferredSize(new Dimension(330, 350));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(2, 2, 2, 2);
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 1;
+        gbc.weighty = 1;
 
-        String[] leftButtonsText = {
-                "sort ints", "add to bst", "add to treeset", "add to priority queue", "add to hashset",
-                "add to arraylist", "add to sorted arraylist", "add to array", "merge sort ints", "merge2 sort ints",
-                "quick sort ints"
-        };
+        // initalize buttons for left button panel
+        leftButtons[0] = new JButton("sort ints");
+        leftButtons[1] = new JButton("add to bst");
+        leftButtons[2] = new JButton("add to treeset");
+        leftButtons[3] = new JButton("add to priority queue");
+        leftButtons[4] = new JButton("add to hashset");
+        leftButtons[5] = new JButton("add to arraylist");
+        leftButtons[6] = new JButton("add to sorted arraylist");
+        leftButtons[7] = new JButton("add to array");
 
-        Map<JButton, JLabel> leftButtonLabelMap = new HashMap<>();
-
-        for (int i = 0; i < leftButtonsText.length; i++) {
-            JButton button = new JButton(leftButtonsText[i]);
+        // disable buttons on startup
+        for (JButton button : leftButtons) {
             button.setEnabled(false);
-            JLabel label = new JLabel("no result");
+        }
 
-            button.setPreferredSize(new Dimension(160, 25));
-            label.setPreferredSize(new Dimension(60, 25));
+        // initialize labels for left button panel
+        for (int i = 0; i < leftLabels.length; i++) {
+            leftLabels[i] = new JLabel("no result");
+        }
 
-            button.addActionListener(new ButtonActionListener(leftButtonLabelMap));
-            leftButtonLabelMap.put(button, label);
-
-            // button
-            gbc.gridy = i;
+        // addings buttons and labels to left button panel
+        for (int i = 0; i < leftButtons.length; i++) {
             gbc.gridx = 0;
-            leftButtonPanel.add(button, gbc);
+            gbc.gridy = i;
+            gbc.anchor = GridBagConstraints.LINE_START;
+            leftButtonPanel.add(leftButtons[i], gbc);
+        }
 
-            // label
+        for (int i = 0; i < leftLabels.length; i++) {
             gbc.gridx = 1;
-            leftButtonPanel.add(label, gbc);
+            gbc.gridy = i;
+            gbc.anchor = GridBagConstraints.LINE_END;
+            leftButtonPanel.add(leftLabels[i], gbc);
         }
 
         JPanel rightButtonPanel = new JPanel();
@@ -101,35 +328,61 @@ class wu_feng_p8 {
         rightButtonPanel.setMinimumSize(new Dimension(330, 350));
         rightButtonPanel.setPreferredSize(new Dimension(330, 350));
 
-        String[] rightButtonsText = {
-                "search sorted ints", "search bst", "search treeset", "search priority queue", "search hashset",
-                "search arraylist", "search sorted arraylist", "search array", "search merge sorted ints",
-                "search merge2 sorted ints",
-                "search quick sorted ints"
-        };
+        // initalize buttons for right button panel
+        JButton searchSortedInts = new JButton("search sorted ints");
+        JButton searchBST = new JButton("search bst");
+        JButton searchTreeSet = new JButton("search treeset");
+        JButton searchPQ = new JButton("search priority queue");
+        JButton searchHashset = new JButton("search hashset");
+        JButton searchArraylist = new JButton("search arraylist");
+        JButton searchSortedArraylist = new JButton("search sorted arraylist");
+        JButton searchArray = new JButton("search array");
 
-        Map<JButton, JLabel> rightButtonLabelMap = new HashMap<>();
+        rightButtons[0] = searchSortedInts;
+        rightButtons[1] = searchBST;
+        rightButtons[2] = searchTreeSet;
+        rightButtons[3] = searchPQ;
+        rightButtons[4] = searchHashset;
+        rightButtons[5] = searchArraylist;
+        rightButtons[6] = searchSortedArraylist;
+        rightButtons[7] = searchArray;
 
-        for (int i = 0; i < leftButtonsText.length; i++) {
-            JButton button = new JButton(rightButtonsText[i]);
-            button.setEnabled(false);
-            JLabel label = new JLabel("no result");
-
-            button.setPreferredSize(new Dimension(160, 25));
-            label.setPreferredSize(new Dimension(60, 25));
-
-            button.addActionListener(new ButtonActionListener(rightButtonLabelMap));
-            rightButtonLabelMap.put(button, label);
-
-            // button
-            gbc.gridy = i;
-            gbc.gridx = 0;
-            rightButtonPanel.add(button, gbc);
-
-            // label
-            gbc.gridx = 1;
-            rightButtonPanel.add(label, gbc);
+        // disable buttons upon startup;
+        for (int i = 0; i < rightButtons.length; i++) {
+            rightButtons[i].setEnabled(false);
         }
+
+        // intalize labels for right button panel
+        for (int i = 0; i < rightLabels.length; i++) {
+            rightLabels[i] = new JLabel("no result");
+        }
+
+        // adding buttons and labels to right button panel
+        for (int i = 0; i < leftButtons.length; i++) {
+            gbc.gridx = 0;
+            gbc.gridy = i;
+            gbc.anchor = GridBagConstraints.LINE_START;
+            gbc.gridwidth = 1;
+            rightButtonPanel.add(rightButtons[i], gbc);
+        }
+
+        for (int i = 0; i < rightLabels.length; i++) {
+            gbc.gridx = 1;
+            gbc.gridy = i;
+            gbc.anchor = GridBagConstraints.LINE_END;
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            rightButtonPanel.add(rightLabels[i], gbc);
+        }
+
+        MenuItemActionListener readSortFileListener = new MenuItemActionListener(readSortFile, leftButtons,
+                rightButtons);
+        MenuItemActionListener readSearchFileListener = new MenuItemActionListener(readSearchFile, leftButtons,
+                rightButtons);
+        MenuItemActionListener exitListener = new MenuItemActionListener(exit, leftButtons, rightButtons);
+
+        readSortFile.addActionListener(readSortFileListener);
+        readSearchFile.addActionListener(readSearchFileListener);
+        exit.addActionListener(exitListener);
 
         JPanel mainButtonPanel = new JPanel();
         mainButtonPanel.setBorder(new LineBorder(Color.black, 2));
@@ -152,30 +405,68 @@ class wu_feng_p8 {
 
     static class MenuItemActionListener implements ActionListener {
         private JMenuItem m;
+        private JButton[] leftButtons;
+        private JButton[] rightButtons;
 
-        MenuItemActionListener(JMenuItem m) {
+        MenuItemActionListener(JMenuItem m, JButton[] leftButtons, JButton[] rightButtons) {
             this.m = m;
+            this.leftButtons = leftButtons;
+            this.rightButtons = rightButtons;
         }
 
         public void actionPerformed(ActionEvent e) {
             System.out.println("action performed on " + m.getText() + " menu item");
 
-            if (m.getText().toLowerCase().equals("exit")) {
-                System.exit(0);
+            String action = m.getText().toLowerCase();
+
+            switch (action) {
+                case "read sort file":
+                    readData(sortFile, true);
+                    break;
+
+                case "read search file":
+                    readData(searchFile, false);
+                    break;
+
+                case "exit":
+                    System.exit(0);
+                    break;
             }
         }
     }
 
     static class ButtonActionListener implements ActionListener {
-        private Map<JButton, JLabel> map;
+        private JButton b;
 
-        public ButtonActionListener(Map<JButton, JLabel> map) {
-            this.map = map;
+        ButtonActionListener(JButton b) {
+            this.b = b;
         }
 
         public void actionPerformed(ActionEvent e) {
-            JButton button = (JButton) e.getSource();
-            JLabel label = map.get(button);
+            String action = b.getText();
+            long t0;
+            long t1;
+
+            switch (action) {
+                case "sort ints":
+                    t0 = System.currentTimeMillis();
+                    selectionSort();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[0].setText(t1 - t0 + "ms");
+                    break;
+                case "add to bst":
+                    t0 = System.currentTimeMillis();
+                    addToBinarySearchTree();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[1].setText(t1 - t0 + "ms");
+                    break;
+                case "add to treeset":
+                    t0 = System.currentTimeMillis();
+                    addToTreeSet();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[1].setText(t1 - t0 + "ms");
+                    break;
+            }
         }
     }
 
