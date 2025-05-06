@@ -41,7 +41,6 @@ public class wu_feng_BinarySearchTree implements BinarySearchTreeFunctions {
 		} else {
 			tempParent.setRight(z);
 		}
-
 		z.setCount(1);
 	}
 
@@ -160,11 +159,16 @@ public class wu_feng_BinarySearchTree implements BinarySearchTreeFunctions {
 			return x;
 		}
 
-		if (key < x.getKey()) {
-			return getNode(x.getLeft(), key);
-		} else {
-			return getNode(x.getRight(), key);
+		Node current = x;
+		while (current != null && current.getKey() != key) {
+			if (key < current.getKey()) {
+				current = current.getLeft();
+			} else {
+				current = current.getRight();
+			}
 		}
+
+		return current;
 	}
 
 	public int getHeight(Node x) {

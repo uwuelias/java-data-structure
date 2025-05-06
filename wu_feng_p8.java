@@ -36,7 +36,8 @@ class wu_feng_p8 {
 
     private static ArrayList<Integer> sortInts = new ArrayList<>();
     private static ArrayList<Integer> searchInts = new ArrayList<>();
-    private static wu_feng_BinarySearchTree bst = new wu_feng_BinarySearchTree();
+
+    private static TreeSet<Integer> bstTreeSet = new TreeSet<>();
     private static TreeSet<Integer> ts = new TreeSet<>();
     private static HashSet<Integer> hs = new HashSet<>();
     private static PriorityQueue<Integer> pq = new PriorityQueue<>();
@@ -85,19 +86,19 @@ class wu_feng_p8 {
     }
 
     private static void addToBinarySearchTree() {
-        bst.setRoot(new Node(sortInts.get(0)));
-        for (int i = 1; i < sortInts.size(); i++) {
-            bst.insertNode(new Node(sortInts.get(i)));
+        for (int x : sortInts) {
+            bstTreeSet.add(x);
         }
     }
 
     private static int searchBinarySearchTree() {
         int counter = 0;
         for (int x : searchInts) {
-            if (bst.getNode(bst.getRoot(), x) != null) {
+            if (bstTreeSet.contains(x)) {
                 counter++;
             }
         }
+
         return counter;
     }
 
