@@ -35,7 +35,7 @@ public class wu_feng_BinarySearchTree implements BinarySearchTreeFunctions {
 
 		z.setParent(tempParent);
 		if (tempParent == null) {
-			setRoot(z);
+			setRoot(z); // Tree was empty
 		} else if (z.getKey() < tempParent.getKey()) {
 			tempParent.setLeft(z);
 		} else {

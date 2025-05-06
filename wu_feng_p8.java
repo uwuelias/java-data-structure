@@ -18,7 +18,6 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.TreeSet;
 import java.awt.event.ActionEvent;
@@ -43,7 +42,7 @@ class wu_feng_p8 {
     private static PriorityQueue<Integer> pq = new PriorityQueue<>();
     private static ArrayList<Integer> al = new ArrayList<>();
     private static ArrayList<Integer> al2 = new ArrayList<>();
-    private static int[] arr = new int[sortInts.size()];
+    private static int[] arr;
 
     private static void selectionSort() {
         int size = sortInts.size();
@@ -64,44 +63,42 @@ class wu_feng_p8 {
         }
     }
 
-    private static int searchInts() {
-        for (int x : sortInts) {
-            int low = 0, high = searchInts.size() - 1;
-
+    private static int searchIntsMethod() {
+        int counter = 0;
+        int size = sortInts.size();
+        for (int x : searchInts) {
+            int low = 0, high = size - 1;
             while (low <= high) {
                 int mid = (low + high) / 2;
-
-                if (searchInts.get(mid) == x) {
+                if (sortInts.get(mid) == x) {
+                    counter++;
                     break;
                 }
-
-                if (searchInts.get(mid) < x) {
-                    low = mid + 1;
-                } else {
+                if (x < sortInts.get(mid)) {
                     high = mid - 1;
+                } else {
+                    low = mid + 1;
                 }
             }
         }
-
-        return -1;
+        return counter;
     }
 
     private static void addToBinarySearchTree() {
         bst.setRoot(new Node(sortInts.get(0)));
-
         for (int i = 1; i < sortInts.size(); i++) {
             bst.insertNode(new Node(sortInts.get(i)));
         }
     }
 
     private static int searchBinarySearchTree() {
-        for (int x : sortInts) {
-            Node y = new Node(x);
-            if (bst.getNode(y, x) != null) {
-                continue;
+        int counter = 0;
+        for (int x : searchInts) {
+            if (bst.getNode(bst.getRoot(), x) != null) {
+                counter++;
             }
         }
-        return -1;
+        return counter;
     }
 
     private static void addToTreeSet() {
@@ -111,16 +108,13 @@ class wu_feng_p8 {
     }
 
     private static int searchTreeSet() {
-        for (int x : sortInts) {
-            TreeSet<Integer> temp = ts;
-            while (!temp.isEmpty()) {
-                int y = temp.pollFirst();
-                if (y == x) {
-                    break;
-                }
+        int counter = 0;
+        for (int x : searchInts) {
+            if (ts.contains(x)) {
+                counter++;
             }
         }
-        return -1;
+        return counter;
     }
 
     private static void addToHashSet() {
@@ -130,16 +124,13 @@ class wu_feng_p8 {
     }
 
     private static int searchHashSet() {
-        for (int x : sortInts) {
-            Iterator<Integer> temp = hs.iterator();
-
-            while (temp.hasNext()) {
-                if (temp.next() == x) {
-                    break;
-                }
+        int counter = 0;
+        for (int x : searchInts) {
+            if (hs.contains(x)) {
+                counter++;
             }
         }
-        return -1;
+        return counter;
 
     }
 
@@ -150,37 +141,35 @@ class wu_feng_p8 {
     }
 
     private static int searchPriorityQueue() {
-        for (int x : sortInts) {
-            Iterator<Integer> temp = pq.iterator();
-
-            while (temp.hasNext()) {
-                if (temp.next() == x) {
-                    break;
-                }
+        int counter = 0;
+        for (int x : searchInts) {
+            if (pq.contains(x)) {
+                counter++;
             }
         }
 
-        return -1;
+        return counter;
     }
 
     private static void addToArrayList() {
+        al.clear();
         for (int x : sortInts) {
             al.add(x);
         }
     }
 
     private static int searchArrayList() {
-        for (int x : sortInts) {
-            for (int i = 0; i < al.size(); i++) {
-                if (al.get(i) == x) {
-                    break;
-                }
+        int counter = 0;
+        for (int x : searchInts) {
+            if (al.contains(x)) {
+                counter++;
             }
         }
-        return -1;
+        return counter;
     }
 
     private static void addToSortedArrayList() {
+        al2.clear();
         for (int x : sortInts) {
             al2.add(x);
         }
@@ -189,33 +178,35 @@ class wu_feng_p8 {
     }
 
     private static int searchSortedArrayList() {
-        for (int x : sortInts) {
-            for (int i = 0; i < al2.size(); i++) {
-                if (al2.get(i) == x) {
-                    break;
-                }
+        int counter = 0;
+        for (int x : searchInts) {
+            if (Collections.binarySearch(al2, x) >= 0) {
+                counter++;
             }
         }
 
-        return -1;
+        return counter;
     }
 
     private static void addToArray() {
+        arr = new int[sortInts.size()];
         for (int i = 0; i < sortInts.size(); i++) {
             arr[i] = sortInts.get(i);
         }
     }
 
     private static int searchArray() {
-        for (int x : sortInts) {
+        int counter = 0;
+        for (int x : searchInts) {
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i] == x) {
+                    counter++;
                     break;
                 }
             }
         }
 
-        return -1;
+        return counter;
     }
 
     private static void readData(String filename, boolean readSortValues) {
@@ -273,6 +264,10 @@ class wu_feng_p8 {
         MenuItemActionListener readSearchFileListener = new MenuItemActionListener(readSearchFile);
         MenuItemActionListener exitListener = new MenuItemActionListener(exit);
 
+        readSortFile.addActionListener(readSortFileListener);
+        readSearchFile.addActionListener(readSearchFileListener);
+        exit.addActionListener(exitListener);
+
         menuBar.add(file);
 
         file.add(readSortFile);
@@ -326,8 +321,8 @@ class wu_feng_p8 {
         }
 
         // button listener for left panel
-        for (int i = 0; i < leftButtons.length; i++) {
-
+        for (JButton b : leftButtons) {
+            b.addActionListener(new ButtonActionListener(b));
         }
 
         JPanel rightButtonPanel = new JPanel();
@@ -383,9 +378,10 @@ class wu_feng_p8 {
             rightButtonPanel.add(rightLabels[i], gbc);
         }
 
-        readSortFile.addActionListener(readSortFileListener);
-        readSearchFile.addActionListener(readSearchFileListener);
-        exit.addActionListener(exitListener);
+        // adding action listener to right buttons
+        for (JButton b : rightButtons) {
+            b.addActionListener(new ButtonActionListener(b));
+        }
 
         JPanel mainButtonPanel = new JPanel();
         mainButtonPanel.setBorder(new LineBorder(Color.black, 2));
@@ -442,9 +438,10 @@ class wu_feng_p8 {
         }
 
         public void actionPerformed(ActionEvent e) {
-            String action = b.getText();
+            String action = b.getText().toLowerCase();
             long t0;
             long t1;
+            int counter = 0;
 
             switch (action) {
                 case "sort ints":
@@ -452,6 +449,7 @@ class wu_feng_p8 {
                     selectionSort();
                     t1 = System.currentTimeMillis();
                     leftLabels[0].setText(t1 - t0 + "ms");
+                    System.out.println("working");
                     break;
                 case "add to bst":
                     t0 = System.currentTimeMillis();
@@ -463,8 +461,88 @@ class wu_feng_p8 {
                     t0 = System.currentTimeMillis();
                     addToTreeSet();
                     t1 = System.currentTimeMillis();
-                    leftLabels[1].setText(t1 - t0 + "ms");
+                    leftLabels[2].setText(t1 - t0 + "ms");
                     break;
+                case "add to priority queue":
+                    t0 = System.currentTimeMillis();
+                    addToPriorityQueue();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[3].setText(t1 - t0 + "ms");
+                    break;
+                case "add to hashset":
+                    t0 = System.currentTimeMillis();
+                    addToHashSet();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[4].setText(t1 - t0 + "ms");
+                    break;
+                case "add to arraylist":
+                    t0 = System.currentTimeMillis();
+                    addToArrayList();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[5].setText(t1 - t0 + "ms");
+                    break;
+                case "add to sorted arraylist":
+                    t0 = System.currentTimeMillis();
+                    addToSortedArrayList();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[6].setText(t1 - t0 + "ms");
+                    break;
+                case "add to array":
+                    t0 = System.currentTimeMillis();
+                    addToArray();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[7].setText(t1 - t0 + "ms");
+                    break;
+                case "search sorted ints":
+                    t0 = System.currentTimeMillis();
+                    counter = searchIntsMethod();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[0].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search bst":
+                    t0 = System.currentTimeMillis();
+                    counter = searchBinarySearchTree();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[1].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search treeset":
+                    t0 = System.currentTimeMillis();
+                    counter = searchTreeSet();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[2].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search priority queue":
+                    t0 = System.currentTimeMillis();
+                    counter = searchPriorityQueue();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[3].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search hashset":
+                    t0 = System.currentTimeMillis();
+                    counter = searchHashSet();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[4].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search arraylist":
+                    t0 = System.currentTimeMillis();
+                    counter = searchArrayList();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[5].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search sorted arraylist":
+                    t0 = System.currentTimeMillis();
+                    counter = searchSortedArrayList();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[6].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                case "search array":
+                    t0 = System.currentTimeMillis();
+                    counter = searchArray();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[7].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
+                default:
+                    System.out.println("invalid button");
             }
         }
     }
