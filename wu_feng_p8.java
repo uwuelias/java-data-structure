@@ -29,10 +29,10 @@ class wu_feng_p8 {
     private static String sortFile;
     private static String searchFile;
 
-    private static JButton[] leftButtons = new JButton[8];
-    private static JLabel[] leftLabels = new JLabel[8];
-    private static JButton[] rightButtons = new JButton[8];
-    private static JLabel[] rightLabels = new JLabel[8];
+    private static JButton[] leftButtons = new JButton[9];
+    private static JLabel[] leftLabels = new JLabel[9];
+    private static JButton[] rightButtons = new JButton[9];
+    private static JLabel[] rightLabels = new JLabel[9];
 
     private static ArrayList<Integer> sortInts = new ArrayList<>();
     private static ArrayList<Integer> searchInts = new ArrayList<>();
@@ -44,6 +44,7 @@ class wu_feng_p8 {
     private static ArrayList<Integer> al = new ArrayList<>();
     private static ArrayList<Integer> al2 = new ArrayList<>();
     private static int[] arr;
+    private static ArrayList<Integer> copyOfSortInts;
 
     private static void selectionSort() {
         int size = sortInts.size();
@@ -210,6 +211,45 @@ class wu_feng_p8 {
         return counter;
     }
 
+    private static void mergeSort() {
+        copyOfSortInts = sortInts;
+        int n = sortInts.size();
+
+        for (int size = 1; size < n; size *= 2) {
+            for (int leftStart = 0; leftStart < n - size; leftStart += 2 * size) {
+                int mid = Math.min(leftStart + size - 1, n - 1);
+                int rightEnd = Math.min(leftStart + 2 * size - 1, n - 1);
+                bottomUpMerge(copyOfSortInts, leftStart, mid, rightEnd);
+            }
+        }
+    }
+
+    private static void bottomUpMerge(ArrayList<Integer> list, int leftStart, int mid, int rightEnd) {
+        int n1 = mid - leftStart + 1;
+        int n2 = rightEnd - mid;
+
+        ArrayList<Integer> leftArray = new ArrayList<>(list.subList(leftStart, leftStart + n1));
+        ArrayList<Integer> rightArray = new ArrayList<>(list.subList(mid + 1, mid + n2 + 1));
+
+        int i = 0, j = 0, k = leftStart;
+
+        while (i < n1 && j < n2) {
+            if (leftArray.get(i) <= rightArray.get(j)) {
+                list.set(k++, leftArray.get(i++));
+            } else {
+                list.set(k++, rightArray.get(j++));
+            }
+        }
+
+        while (i < n1) {
+            list.set(k++, leftArray.get(i++));
+        }
+
+        while (j < n2) {
+            list.set(k++, rightArray.get(j++));
+        }
+    }
+
     private static void readData(String filename, boolean readSortValues) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(filename));
@@ -237,6 +277,28 @@ class wu_feng_p8 {
         } catch (Exception e) {
             System.out.println(e.toString());
         }
+    }
+
+    public static int searchMergeSortedInts() {
+        int counter = 0;
+        for (int x : searchInts) {
+            int low = 0, high = copyOfSortInts.size() - 1;
+
+            while (low <= high) {
+                int mid = (low + high) / 2;
+                if (copyOfSortInts.get(mid) == x) {
+                    counter++;
+                    break;
+                }
+                if (x < copyOfSortInts.get(mid)) {
+                    high = mid - 1;
+                } else {
+                    low = mid + 1;
+                }
+            }
+        }
+
+        return counter;
     }
 
     public static void main(String[] args) {
@@ -295,6 +357,7 @@ class wu_feng_p8 {
         leftButtons[5] = new JButton("add to arraylist");
         leftButtons[6] = new JButton("add to sorted arraylist");
         leftButtons[7] = new JButton("add to array");
+        leftButtons[8] = new JButton("merge sort ints");
 
         // disable buttons on startup
         for (JButton button : leftButtons) {
@@ -351,6 +414,7 @@ class wu_feng_p8 {
         rightButtons[5] = searchArraylist;
         rightButtons[6] = searchSortedArraylist;
         rightButtons[7] = searchArray;
+        rightButtons[8] = new JButton("search merge sorted ints");
 
         // disable buttons upon startup;
         for (int i = 0; i < rightButtons.length; i++) {
@@ -494,6 +558,11 @@ class wu_feng_p8 {
                     t1 = System.currentTimeMillis();
                     leftLabels[7].setText(t1 - t0 + "ms");
                     break;
+                case "merge sort ints":
+                    t0 = System.currentTimeMillis();
+                    mergeSort();
+                    t1 = System.currentTimeMillis();
+                    leftLabels[8].setText(t1 - t0 + "ms");
                 case "search sorted ints":
                     t0 = System.currentTimeMillis();
                     counter = searchIntsMethod();
@@ -542,6 +611,11 @@ class wu_feng_p8 {
                     t1 = System.currentTimeMillis();
                     rightLabels[7].setText(counter + " / " + (t1 - t0) + "ms");
                     break;
+                case "search merge sorted ints":
+                    t0 = System.currentTimeMillis();
+                    counter = searchMergeSortedInts();
+                    t1 = System.currentTimeMillis();
+                    rightLabels[8].setText(counter + " / " + (t1 - t0) + "ms");
                 default:
                     System.out.println("invalid button");
             }
