@@ -48,19 +48,24 @@ class wu_feng_p8 {
 
     private static void selectionSort() {
         int size = sortInts.size();
+        int[] sortedArray = new int[size];
+
+        for (int i = 0; i < size; i++) {
+            sortedArray[i] = sortInts.get(i);
+        }
 
         for (int i = 0; i < size - 1; i++) {
             int minIdx = i;
             for (int j = i + 1; j < size; j++) {
-                if (sortInts.get(minIdx) > sortInts.get(j)) {
+                if (sortedArray[minIdx] > sortedArray[j]) {
                     minIdx = j;
                 }
             }
 
             if (minIdx != i) {
-                int temp = sortInts.get(i);
-                sortInts.set(i, sortInts.get(minIdx));
-                sortInts.set(minIdx, temp);
+                int temp = sortedArray[i];
+                sortedArray[i] = sortedArray[minIdx];
+                sortedArray[minIdx] = temp;
             }
         }
     }
@@ -339,7 +344,8 @@ class wu_feng_p8 {
 
         JPanel leftButtonPanel = new JPanel();
         leftButtonPanel.setBorder(new LineBorder(Color.black, 2));
-        leftButtonPanel.setLayout(new GridBagLayout());
+        GridBagLayout gridBagLayout = new GridBagLayout();
+        leftButtonPanel.setLayout(gridBagLayout);
         leftButtonPanel.setMinimumSize(new Dimension(330, 350));
         leftButtonPanel.setPreferredSize(new Dimension(330, 350));
 
@@ -369,18 +375,20 @@ class wu_feng_p8 {
             leftLabels[i] = new JLabel("no result");
         }
 
-        // addings buttons and labels to left button panel
+        // adding buttons and labels to left button panel
         for (int i = 0; i < leftButtons.length; i++) {
             gbc.gridx = 0;
             gbc.gridy = i;
+            gbc.gridwidth = 1;
+            gridBagLayout.setConstraints(leftButtons[i], gbc);
             gbc.anchor = GridBagConstraints.LINE_START;
             leftButtonPanel.add(leftButtons[i], gbc);
-        }
 
-        for (int i = 0; i < leftLabels.length; i++) {
             gbc.gridx = 1;
             gbc.gridy = i;
             gbc.anchor = GridBagConstraints.LINE_END;
+            gbc.gridwidth = GridBagConstraints.REMAINDER;
+            gridBagLayout.setConstraints(leftLabels[i], gbc);
             leftButtonPanel.add(leftLabels[i], gbc);
         }
 
@@ -563,6 +571,7 @@ class wu_feng_p8 {
                     mergeSort();
                     t1 = System.currentTimeMillis();
                     leftLabels[8].setText(t1 - t0 + "ms");
+                    break;
                 case "search sorted ints":
                     t0 = System.currentTimeMillis();
                     counter = searchIntsMethod();
@@ -616,6 +625,7 @@ class wu_feng_p8 {
                     counter = searchMergeSortedInts();
                     t1 = System.currentTimeMillis();
                     rightLabels[8].setText(counter + " / " + (t1 - t0) + "ms");
+                    break;
                 default:
                     System.out.println("invalid button");
             }
