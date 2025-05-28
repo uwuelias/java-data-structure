@@ -29,4 +29,4 @@ This Java Swing GUI application compares the performance of various sorting and 
 
 ## Execution
 Run the program with two arguments: the sort data file and the search data file.
-# java wu_feng_p8 sortData.txt searchData.txt
+### java wu_feng_p8 sortData.txt searchData.txt
